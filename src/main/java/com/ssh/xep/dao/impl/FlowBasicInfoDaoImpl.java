@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ssh.xep.dao.FlowBasicInfoDao;
@@ -11,6 +12,7 @@ import com.ssh.xep.entity.FlowBasicInfo;
 
 @Repository("flowBasicInfoDao")
 public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
+	@Autowired
 	private SessionFactory sessionFactory;
 	private Session getSession() {
 		return this.sessionFactory.getCurrentSession();
@@ -25,28 +27,29 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 	}
 
 	public List<FlowBasicInfo> findAll() {
-		List<FlowBasicInfo> infos = getSession().createQuery("from flowBasicInfo").list();
+		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo").list();
 		return infos;
 	}
 
 	public void persist(FlowBasicInfo entity) {
-
+		getSession().persist(entity);
 	}
 
 	public Integer save(FlowBasicInfo entity) {
-		return null;
+		return (Integer) getSession().save(entity);
 	}
 
 	public void saveOrUpdate(FlowBasicInfo entity) {
-
+		getSession().saveOrUpdate(entity);
 	}
 
 	public void delete(Integer id) {
-
+		FlowBasicInfo entity = load(id);
+		getSession().delete(entity);
 	}
 
 	public void flush() {
-
+		getSession().flush();
 	}
 
 }
