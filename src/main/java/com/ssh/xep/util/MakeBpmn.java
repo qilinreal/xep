@@ -25,7 +25,7 @@ import org.dom4j.Element;
 public class MakeBpmn {
 	private Document xml;
 	private Set<String> exts;
-	private static final String loadNamePrefix = "com.sample.";
+	private static final String loadNamePrefix = "com.ssh.xep.bpmn.";
 
 	public MakeBpmn(String loadName) throws ParserConfigurationException {
 		this(loadName, loadName + " name");

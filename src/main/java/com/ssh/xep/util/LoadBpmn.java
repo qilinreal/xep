@@ -16,7 +16,7 @@ import org.dom4j.Element;
  * @author qilin
  */
 public class LoadBpmn {
-	private static final String loadNamePrefix = "com.sample.";
+	private static final String loadNamePrefix = "com.ssh.xep.bpmn.";
 
 	/**
 	 * 在用户特定路径下生成bpmn文件
