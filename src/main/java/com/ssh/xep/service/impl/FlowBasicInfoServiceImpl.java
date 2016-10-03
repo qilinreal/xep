@@ -25,6 +25,10 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 	public List<FlowBasicInfo> findAll() {
 		return dao.findAll();
 	}
+	
+	public List<FlowBasicInfo> findAll(Integer userId) {
+		return dao.findAll(userId);
+	}
 
 	public void pessist(FlowBasicInfo entity) {
 		dao.persist(entity);

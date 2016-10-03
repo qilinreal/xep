@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>index</title>
+<title>登录</title>
 </head>
 <body>
 <%session.setAttribute("userId", 3424); %>
-12312312
 </body>
 </html>

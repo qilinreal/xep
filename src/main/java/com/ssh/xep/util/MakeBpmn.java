@@ -13,12 +13,19 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+/**
+ * 生成BPMN文件
+ * @author qilin
+ */
 public class MakeBpmn {
 	private Document xml;
 	private Set<String> exts;
+	private static final String loadNamePrefix = "com.sample.";
 
 	public MakeBpmn(String loadName) throws ParserConfigurationException {
 		this(loadName, loadName + " name");
@@ -47,7 +54,7 @@ public class MakeBpmn {
 
 		e1.addAttribute("processType", "Private");
 		e1.addAttribute("isExecutable", "true");
-		e1.addAttribute("id", loadName);
+		e1.addAttribute("id", loadNamePrefix+loadName);
 		e1.addAttribute("name", name);
 
 		e1.addElement("extensionElements");
@@ -60,11 +67,11 @@ public class MakeBpmn {
 		eEnd.addElement("terminateEventDefinition");
 
 		Element plane = e2.addElement("bpmndi:BPMNPlane", "http://www.omg.org/spec/BPMN/20100524/DI");
-		plane.addAttribute("bpmnElement", loadName);
+		plane.addAttribute("bpmnElement", loadNamePrefix+loadName);
 	}
 
-	public void addTask(String taskId, File scriptFile) throws IOException {
-		addTask(taskId, scriptFile, null);
+	public void addTask(String taskId, String name, File scriptFile) throws IOException {
+		addTask(taskId, name, scriptFile, null);
 	}
 
 	/**
@@ -76,7 +83,7 @@ public class MakeBpmn {
 	 *            引用包
 	 * @throws IOException
 	 */
-	public void addTask(String taskId, File scriptFile, String exts) throws IOException {
+	public void addTask(String taskId, String name, File scriptFile, String exts) throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
 		BufferedReader br = new BufferedReader(isr);
@@ -88,11 +95,11 @@ public class MakeBpmn {
 		}
 		fis.close();
 
-		addTask(taskId, sb.toString(), exts);
+		addTask(taskId, name, sb.toString(), exts);
 	}
 
-	public void addTask(String taskId, String script) {
-		addTask(taskId, script, (String) null);
+	public void addTask(String taskId, String name, String script) {
+		addTask(taskId, name, script, (String) null);
 	}
 
 	/**
@@ -103,15 +110,15 @@ public class MakeBpmn {
 	 * @param exts
 	 *            引用包
 	 */
-	public void addTask(String taskId, String script, String exts) {
+	public void addTask(String taskId, String name, String script, String exts) {
 		if (exts != null) {
-			addTask(taskId, script, exts.split(";"));
+			addTask(taskId, name, script, exts.split(";"));
 		} else {
-			addTask(taskId, script, (String[]) null);
+			addTask(taskId, name, script, (String[]) null);
 		}
 	}
 
-	public void addTask(String taskId, String script, String[] exts) {
+	public void addTask(String taskId, String dataName, String script, String[] exts) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
 			e = e.element("process").element("extensionElements");
@@ -146,21 +153,44 @@ public class MakeBpmn {
 		e.addAttribute("id", id);
 		e.addAttribute("name", name);
 		e.addAttribute("scriptFormat", scriptFormat);
+		e.addAttribute("data-name", dataName);
 		e.addElement("script").addText(script);
 	}
 
 	public void addConnection(String fromId, String toId) {
 		String sourceRef = fromId;
-		if(sourceRef.equals("_1") == false) {
-			sourceRef = "_jbpm-unique-"+sourceRef;
+		if (sourceRef.equals("_1") == false) {
+			sourceRef = "_jbpm-unique-" + sourceRef;
 		}
 		String targetRef = toId;
-		if(targetRef.equals("_3") == false) {
-			targetRef = "_jbpm-unique-"+targetRef;
+		if (targetRef.equals("_3") == false) {
+			targetRef = "_jbpm-unique-" + targetRef;
 		}
-		String id = sourceRef+"-"+targetRef;
+		String id = sourceRef + "-" + targetRef;
 		Element e = xml.getRootElement().element("process").addElement("sequenceFlow");
 		e.addAttribute("id", id).addAttribute("sourceRef", sourceRef).addAttribute("targetRef", targetRef);
+	}
+
+	/**
+	 * 添加分开节点
+	 * 
+	 * @param gatewayId
+	 */
+	public void addDiverging(String gatewayId) {
+		String id = "_jbpm-unique-" + gatewayId;
+		xml.getRootElement().element("process").addElement("parallelGateway").addAttribute("id", id)
+				.addAttribute("name", "Gateway").addAttribute("gatewayDirection", "Diverging");
+	}
+
+	/**
+	 * 添加合并节点
+	 * 
+	 * @param gatewayId
+	 */
+	public void addConverging(String gatewayId) {
+		String id = "_jbpm-unique-" + gatewayId;
+		xml.getRootElement().element("process").addElement("parallelGateway").addAttribute("id", id)
+				.addAttribute("name", "Gateway").addAttribute("gatewayDirection", "Converging");
 	}
 
 	public String get() throws TransformerFactoryConfigurationError, TransformerException {

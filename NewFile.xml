@@ -7,8 +7,8 @@
 	xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
 	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
 	xmlns:tns="http://www.jboss.org/drools">
-	<process processType="Private" isExecutable="true" id="com.sample.hello"
-		name="hello man">
+	<process processType="Private" isExecutable="true"
+		id="com.sample.com.sample.hello" name="hello man">
 		<extensionElements>
 			<tns:import name="java.net.URL" />
 			<tns:import name="java.lang.String" />
@@ -18,13 +18,13 @@
 			<terminateEventDefinition />
 		</endEvent>
 		<scriptTask id="_jbpm-unique-123" name="123"
-			scriptFormat="http://www.java.com/java">
+			scriptFormat="http://www.java.com/java" data-name="xiaohong">
 			<script>for(int i=0; i&lt;5; i++) {try {Thread.sleep(1000);
 				System.out.println("1000");}
 			</script>
 		</scriptTask>
 	</process>
 	<bpmndi:BPMNDiagram>
-		<bpmndi:BPMNPlane bpmnElement="com.sample.hello" />
+		<bpmndi:BPMNPlane bpmnElement="com.sample.com.sample.hello" />
 	</bpmndi:BPMNDiagram>
 </definitions>

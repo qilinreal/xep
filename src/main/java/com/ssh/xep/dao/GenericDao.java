@@ -9,7 +9,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	T get(PK id);
 
 	List<T> findAll();
-
+	
 	void persist(T entity);
 
 	PK save(T entity);

@@ -2,6 +2,7 @@ package com.ssh.xep.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.ssh.xep.entity.FlowBasicInfo;
 public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 	@Autowired
 	private SessionFactory sessionFactory;
+
 	private Session getSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
@@ -28,6 +30,11 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 
 	public List<FlowBasicInfo> findAll() {
 		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo").list();
+		return infos;
+	}
+
+	public List<FlowBasicInfo> findAll(Integer userId) {
+		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo where userId=?0").setInteger("0", userId).list();
 		return infos;
 	}
 

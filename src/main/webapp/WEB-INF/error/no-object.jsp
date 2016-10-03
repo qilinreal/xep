@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>index</title>
+<title>没有对象</title>
 </head>
 <body>
-<%session.setAttribute("userId", 3424); %>
-12312312
+	找不到对象呢
 </body>
 </html>
