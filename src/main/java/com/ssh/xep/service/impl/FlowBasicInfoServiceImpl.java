@@ -59,10 +59,8 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 
 	public void saveOrUpdate(FlowBasicInfo entity) throws ParserConfigurationException {
 		if (entity.getBpmn().startsWith("{")) {
-			System.out.println("----------------------------------------");
 			entity.setBpmn(JSON2XML.json2XML(entity.getId(), entity.getName(), entity.getBpmn()));
 		}
-		System.out.println("===========================================");
 		dao.saveOrUpdate(entity);
 	}
 
