@@ -3,6 +3,8 @@ package com.ssh.xep.action;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -64,7 +66,11 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	public FlowBasicInfo getModel() {
 		if (id != null) {
-			info = service.get(id);
+			try {
+				info = service.get(id);
+			} catch (DocumentException e) {
+				e.printStackTrace();
+			}
 		} else {
 			info = new FlowBasicInfo();
 		}
@@ -85,32 +91,28 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
-		ServletActionContext.getRequest().setAttribute("bpmn", XML2JSON.xml2JSON(info.getBpmn()));
 		return SUCCESS;
 	}
 
 	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp"),
 			@Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
-	public String modify() throws DocumentException {
+	public String modify() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
 		if (id == null) {
 			ServletActionContext.getRequest().setAttribute("create", "创建");
-			FlowBasicInfo info = new FlowBasicInfo();
+			info = new FlowBasicInfo();
 			info.setBpmn("");
 			info.setFlowNum(0);
 			info.setName("NO NAME");
 			id = String.valueOf(service.save(info));
 		} else {
 			ServletActionContext.getRequest().setAttribute("create", "修改");
-			FlowBasicInfo info = service.get(Integer.parseInt(id));
+			info = service.get(Integer.parseInt(id));
 			if (info == null) {
 				return ERROR;
 			}
-			ServletActionContext.getRequest().setAttribute("bpmn", XML2JSON.xml2JSON(info.getBpmn()));
-			ServletActionContext.getRequest().setAttribute("flowNum", info.getFlowNum());
-			ServletActionContext.getRequest().setAttribute("name", info.getName());
-			ServletActionContext.getRequest().setAttribute("userId", info.getUserId());
+			System.out.println(info.getBpmn());
 		}
 		return SUCCESS;
 	}

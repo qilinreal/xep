@@ -18,19 +18,23 @@ import org.dom4j.Element;
 public class LoadBpmn {
 	private static final String loadNamePrefix = "com.ssh.xep.bpmn.";
 
-	/**
-	 * 在用户特定路径下生成bpmn文件
-	 * 
-	 * @param bpmnStr
-	 * @param userId
-	 * @param jobId
-	 * @param userRoot
-	 * @throws DocumentException
-	 * @throws IOException
-	 */
 	public static void loadBpmn(String bpmnStr, String userId, String jobId, String userRoot)
 			throws DocumentException, IOException {
 		Document xml = DocumentHelper.parseText(bpmnStr);
+		loadBpmn(xml, userId, jobId, userRoot);
+	}
+
+	/**
+	 * 在用户特定路径下生成bpmn文件，文件名是【userId】_【jobId】.bpmn，调用id是loadNamePrefix【userId】.【jobId】
+	 * @param xml xml文件
+	 * @param userId 用户ID
+	 * @param jobId 数据库中的job的ID
+	 * @param userRoot 用户根目录
+	 * @throws DocumentException
+	 * @throws IOException
+	 */
+	public static void loadBpmn(Document xml, String userId, String jobId, String userRoot)
+			throws DocumentException, IOException {
 		Element process = xml.getRootElement().element("process");
 		process.remove(process.attribute("id"));
 		process.addAttribute("id", loadNamePrefix + userId + "." + jobId);

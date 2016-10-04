@@ -2,7 +2,10 @@ package com.ssh.xep;
 
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class AppTest {
 	private FlowBasicInfoService service;
 
 	@Test
-	public void save() {
+	public void save() throws ParserConfigurationException {
 		FlowBasicInfo info = new FlowBasicInfo();
 		info.setBpmn("123");
 		info.setFlowNum(123);
@@ -36,7 +39,7 @@ public class AppTest {
 	}
 	
 	@Test
-	public void findAll() {
+	public void findAll() throws DocumentException {
 		List<FlowBasicInfo> infos = service.findAll();
 		for(FlowBasicInfo f : infos) {
 			System.out.println(f.getId()+"--"+f.getName()+"--"+f.getUserId()+"--"+f.getFlowNum()+"--"+f.getBpmn());

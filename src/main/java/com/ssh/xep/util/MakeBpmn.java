@@ -20,6 +20,7 @@ import org.dom4j.Element;
 
 /**
  * 生成BPMN文件
+ * 
  * @author qilin
  */
 public class MakeBpmn {
@@ -31,6 +32,12 @@ public class MakeBpmn {
 		this(loadName, loadName + " name");
 	}
 
+	/**
+	 * 初始化，创建bpmn文件的雏形
+	 * @param loadName 执行bpmn文件时需要的名字，会被冠以前缀，作为id存在
+	 * @param name bpmn文件中process的name
+	 * @throws ParserConfigurationException
+	 */
 	public MakeBpmn(String loadName, String name) throws ParserConfigurationException {
 		this.exts = new HashSet<String>();
 
@@ -54,7 +61,7 @@ public class MakeBpmn {
 
 		e1.addAttribute("processType", "Private");
 		e1.addAttribute("isExecutable", "true");
-		e1.addAttribute("id", loadNamePrefix+loadName);
+		e1.addAttribute("id", loadNamePrefix + loadName);
 		e1.addAttribute("name", name);
 
 		e1.addElement("extensionElements");
@@ -67,7 +74,7 @@ public class MakeBpmn {
 		eEnd.addElement("terminateEventDefinition");
 
 		Element plane = e2.addElement("bpmndi:BPMNPlane", "http://www.omg.org/spec/BPMN/20100524/DI");
-		plane.addAttribute("bpmnElement", loadNamePrefix+loadName);
+		plane.addAttribute("bpmnElement", loadNamePrefix + loadName);
 	}
 
 	public void addTask(String taskId, String name, File scriptFile) throws IOException {
@@ -77,8 +84,10 @@ public class MakeBpmn {
 	/**
 	 * @param taskId
 	 *            任务ID
+	 * @param name
+	 *            任务名称
 	 * @param scriptFile
-	 *            脚本文件
+	 *            脚本文件，里面包含了完整的脚本
 	 * @param exts
 	 *            引用包
 	 * @throws IOException
@@ -102,14 +111,6 @@ public class MakeBpmn {
 		addTask(taskId, name, script, (String) null);
 	}
 
-	/**
-	 * @param taskId
-	 *            任务ID
-	 * @param script
-	 *            脚本
-	 * @param exts
-	 *            引用包
-	 */
 	public void addTask(String taskId, String name, String script, String exts) {
 		if (exts != null) {
 			addTask(taskId, name, script, exts.split(";"));
@@ -118,6 +119,16 @@ public class MakeBpmn {
 		}
 	}
 
+	/**
+	 * @param taskId
+	 *            任务ID
+	 * @param dataName
+	 *            任务名称
+	 * @param script
+	 *            执行脚本，完整脚本
+	 * @param exts
+	 *            引用包，完整形式，包含import
+	 */
 	public void addTask(String taskId, String dataName, String script, String[] exts) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
@@ -157,6 +168,11 @@ public class MakeBpmn {
 		e.addElement("script").addText(script);
 	}
 
+	/**
+	 * 将不同id的script联系在一起，会判断_1和_3
+	 * @param fromId 源id，会被加上前缀
+	 * @param toId 目的id，会被加上前缀
+	 */
 	public void addConnection(String fromId, String toId) {
 		String sourceRef = fromId;
 		if (sourceRef.equals("_1") == false) {
@@ -174,7 +190,7 @@ public class MakeBpmn {
 	/**
 	 * 添加分开节点
 	 * 
-	 * @param gatewayId
+	 * @param gatewayId 会被加上前缀
 	 */
 	public void addDiverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;
@@ -185,7 +201,7 @@ public class MakeBpmn {
 	/**
 	 * 添加合并节点
 	 * 
-	 * @param gatewayId
+	 * @param gatewayId 会被加上前缀
 	 */
 	public void addConverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;

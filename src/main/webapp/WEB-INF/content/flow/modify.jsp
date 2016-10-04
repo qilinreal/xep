@@ -18,6 +18,6 @@
 </head>
 <body>
 	<p>id is ${id }</p>
-	<p>${bpmn }</p>
+	<p>${info.bpmn }</p>
 </body>
 </html>
