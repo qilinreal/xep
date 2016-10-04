@@ -34,7 +34,8 @@ public class FlowBasicInfoDaoImpl implements FlowBasicInfoDao {
 	}
 
 	public List<FlowBasicInfo> findAll(Integer userId) {
-		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo where userId=?0").setInteger("0", userId).list();
+		List<FlowBasicInfo> infos = getSession().createQuery("from FlowBasicInfo where userId=?0")
+				.setInteger("0", userId).list();
 		return infos;
 	}
 

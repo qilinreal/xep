@@ -1,27 +1,22 @@
 package com.ssh.xep.action;
 
 import java.util.List;
-import java.util.Scanner;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.InterceptorRef;
-import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
+import org.springframework.context.ApplicationContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
+import com.ssh.xep.SpringContextHolder;
 import com.ssh.xep.entity.FlowBasicInfo;
 import com.ssh.xep.service.FlowBasicInfoService;
-import com.ssh.xep.util.XML2JSON;
 
 @Namespace("/flow")
 public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<FlowBasicInfo>, Preparable {
@@ -94,6 +89,14 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		info = service.get(Integer.valueOf(id));
 		if (info == null) {
 			return ERROR;
+		}
+		
+		ApplicationContext ac = SpringContextHolder.getApplicationContext();
+		System.out.println("-------------------------------------");
+		System.out.println(ac.getApplicationName());
+		System.out.println(ac.containsBean("com.ssh.xep.action.FlowBasicInfoAction"));
+		for(String s : ac.getBeanDefinitionNames()) {
+			System.out.println(s);
 		}
 
 		return SUCCESS;
