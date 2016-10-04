@@ -77,8 +77,8 @@ public class MakeBpmn {
 		plane.addAttribute("bpmnElement", loadNamePrefix + loadName);
 	}
 
-	public void addTask(String taskId, String name, File scriptFile) throws IOException {
-		addTask(taskId, name, scriptFile, null);
+	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile) throws IOException {
+		addTask(taskId, name, toolId, toolName, scriptFile, null);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class MakeBpmn {
 	 *            引用包
 	 * @throws IOException
 	 */
-	public void addTask(String taskId, String name, File scriptFile, String exts) throws IOException {
+	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts) throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
 		BufferedReader br = new BufferedReader(isr);
@@ -104,18 +104,18 @@ public class MakeBpmn {
 		}
 		fis.close();
 
-		addTask(taskId, name, sb.toString(), exts);
+		addTask(taskId, name, toolId, toolName, sb.toString(), exts);
 	}
 
-	public void addTask(String taskId, String name, String script) {
-		addTask(taskId, name, script, (String) null);
+	public void addTask(String taskId, String name, int toolId, String toolName, String script) {
+		addTask(taskId, name, toolId, toolName, script, (String) null);
 	}
 
-	public void addTask(String taskId, String name, String script, String exts) {
+	public void addTask(String taskId, String name, int toolId, String toolName, String script, String exts) {
 		if (exts != null) {
-			addTask(taskId, name, script, exts.split(";"));
+			addTask(taskId, name, toolId, toolName, script, exts.split(";"));
 		} else {
-			addTask(taskId, name, script, (String[]) null);
+			addTask(taskId, name, toolId, toolName, script, (String[]) null);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class MakeBpmn {
 	 * @param exts
 	 *            引用包，完整形式，包含import
 	 */
-	public void addTask(String taskId, String dataName, String script, String[] exts) {
+	public void addTask(String taskId, String dataName, int toolId, String toolName, String script, String[] exts) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
 			e = e.element("process").element("extensionElements");
@@ -165,6 +165,8 @@ public class MakeBpmn {
 		e.addAttribute("name", name);
 		e.addAttribute("scriptFormat", scriptFormat);
 		e.addAttribute("data-name", dataName);
+		e.addAttribute("tool-id", String.valueOf(toolId));
+		e.addAttribute("tool-name", String.valueOf(toolName));
 		e.addElement("script").addText(script);
 	}
 
@@ -211,5 +213,9 @@ public class MakeBpmn {
 
 	public String get() throws TransformerFactoryConfigurationError, TransformerException {
 		return xml.asXML();
+	}
+	
+	public Document getXML() {
+		return xml;
 	}
 }

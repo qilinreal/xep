@@ -9,9 +9,13 @@ public class MakeFlow {
 		bpmn = new MakeBpmn(loadName, name);
 	}
 
+	public MakeBpmn getBpmn() {
+		return bpmn;
+	}
+	
 	// 添加工具
 	// 工具是获取工具ID的，执行程序的时候，会根据工具ID获取工具位置，然后执行工具
-	public void addTask(String id, String toolId) {
+	public void addTask(String id, String name, String toolId, String toolName) {
 	}
 
 	// 给不同ID之间添加连接

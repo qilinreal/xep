@@ -22,6 +22,7 @@ public class XML2JSON {
 		JSONObject ret = new JSONObject();
 		JSONArray obj = new JSONArray();
 		JSONArray link = new JSONArray();
+		JSONArray gateway = new JSONArray();
 
 		Document xml = DocumentHelper.parseText(xmlStr);
 		Element e = xml.getRootElement().element("process");
@@ -31,6 +32,8 @@ public class XML2JSON {
 			String sAttr = n.attributeValue("id");
 			t.put("id", sAttr.substring(13));
 			t.put("name", n.attributeValue("data-name"));
+			t.put("tool-id", n.attributeValue("tool-id"));
+			t.put("tool-name", n.attributeValue("tool-name"));
 			obj.add(t);
 		}
 		if (true) {
@@ -62,9 +65,20 @@ public class XML2JSON {
 			t.put("to", str);
 			link.add(t);
 		}
+		
+		el = e.elements("parallelGateway");
+		for(Element n : el) {
+			JSONObject t = new JSONObject();
+			String str = n.attributeValue("id").substring(13);
+			String dir = n.attributeValue("gatewayDirection");
+			t.put("id", str);
+			t.put("gatewayDirection", dir);
+			gateway.add(t);
+		}
 
 		ret.put("Obj", obj);
 		ret.put("Link", link);
+		ret.put("Gateway", gateway);
 		return ret;
 	}
 

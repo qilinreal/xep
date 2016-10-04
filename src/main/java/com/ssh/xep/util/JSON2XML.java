@@ -1,5 +1,7 @@
 package com.ssh.xep.util;
 
+import java.util.Iterator;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.dom4j.Document;
@@ -23,14 +25,37 @@ public class JSON2XML {
 	}
 
 	/**
-	 * 将ID转换为_jbpm...开头
-	 * 组成合适的bpmn文件
-	 * @throws ParserConfigurationException 
+	 * 将ID转换为_jbpm...开头 组成合适的bpmn文件
+	 * 
+	 * @throws ParserConfigurationException
 	 */
-	public static Document json2XMLObject(int flowId, String name, JSONObject json) throws ParserConfigurationException {
+	public static Document json2XMLObject(int flowId, String name, JSONObject json)
+			throws ParserConfigurationException {
 		JSONArray obj = json.getJSONArray("Obj");
 		JSONArray link = json.getJSONArray("Link");
+		JSONArray gateway = json.getJSONArray("Gateway");
 		MakeFlow flow = new MakeFlow(String.valueOf(flowId), name);
-		return null;
+		Iterator<Object> it = obj.iterator();
+		while (it.hasNext()) {
+			JSONObject o = (JSONObject) it.next();
+			flow.addTask(o.getString("id"), o.getString("name"), o.getString("tool-id"), o.getString("tool-name"));
+		}
+
+		it = link.iterator();
+		while (it.hasNext()) {
+			JSONObject o = (JSONObject) it.next();
+			flow.addConnection(o.getString("from"), o.getString("to"));
+		}
+
+		it = gateway.iterator();
+		while (it.hasNext()) {
+			JSONObject o = (JSONObject) it.next();
+			if (o.getString("gatewayDirection").equals("Diverging")) {
+				flow.addDiverging(o.getString("id"));
+			} else {
+				flow.addConverging(o.getString("id"));
+			}
+		}
+		return flow.getBpmn().getXML();
 	}
 }

@@ -26,7 +26,7 @@ public interface FlowBasicInfoService {
 	 */
 	Integer save(FlowBasicInfo entity) throws ParserConfigurationException;
 
-	void saveOrUpdate(FlowBasicInfo entity);
+	void saveOrUpdate(FlowBasicInfo entity) throws ParserConfigurationException;
 
 	void delete(Integer id);
 
