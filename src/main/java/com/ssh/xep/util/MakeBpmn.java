@@ -35,6 +35,7 @@ public class MakeBpmn {
 	/**
 	 * 初始化，创建bpmn文件的雏形
 	 * @param loadName 执行bpmn文件时需要的名字，会被冠以前缀，作为id存在
+	 * id是loadNamePrefix【loadName】
 	 * @param name bpmn文件中process的name
 	 * @throws ParserConfigurationException
 	 */

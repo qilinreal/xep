@@ -9,6 +9,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.QName;
 
 /**
  * 加载BPMN数据并生成对应文件。
@@ -26,16 +27,24 @@ public class LoadBpmn {
 
 	/**
 	 * 在用户特定路径下生成bpmn文件，文件名是【userId】_【jobId】.bpmn，调用id是loadNamePrefix【userId】.【jobId】
-	 * @param xml xml文件
-	 * @param userId 用户ID
-	 * @param jobId 数据库中的job的ID
-	 * @param userRoot 用户根目录
+	 * 
+	 * @param xml
+	 *            xml文件
+	 * @param userId
+	 *            用户ID
+	 * @param jobId
+	 *            数据库中的job的ID
+	 * @param userRoot
+	 *            用户根目录
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
 	public static void loadBpmn(Document xml, String userId, String jobId, String userRoot)
 			throws DocumentException, IOException {
 		Element process = xml.getRootElement().element("process");
+		xml.getRootElement().element(new QName("BPMNDiagram", xml.getRootElement().getNamespaceForPrefix("bpmndi")))
+				.element(new QName("BPMNPlane", xml.getRootElement().getNamespaceForPrefix("bpmndi")))
+				.addAttribute("bpmnElement", loadNamePrefix + userId + "." + jobId);
 		process.remove(process.attribute("id"));
 		process.addAttribute("id", loadNamePrefix + userId + "." + jobId);
 

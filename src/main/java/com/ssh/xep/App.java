@@ -9,6 +9,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
 
 import com.ssh.xep.util.MakeBpmn;
 import com.ssh.xep.util.XML2JSON;
@@ -23,9 +26,11 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 		String xmlStr = "";
 		String str;
-		while((str=sc.nextLine()).equals("0") == false) {
-			xmlStr += str+"\n";
+		while ((str = sc.nextLine()).equals("0") == false) {
+			xmlStr += str + "\n";
 		}
-		System.out.println(DocumentHelper.parseText(xmlStr).asXML());
+		// Element e = DocumentHelper.parseText(xmlStr).getRootElement();
+		Element e = new MakeBpmn("cc").getXML().getRootElement();
+		System.out.println(e.element("BPMNDiagram").element("BPMNPlane").addAttribute("bpmnElement", "ccc").getDocument().asXML());
 	}
 }
