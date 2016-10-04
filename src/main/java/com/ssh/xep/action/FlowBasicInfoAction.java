@@ -87,11 +87,14 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		return SUCCESS;
 	}
 
-	@Action("detail")
+	@Action(value = "detail", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp") })
 	public String detail() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
+		if (info == null) {
+			return ERROR;
+		}
 
 		return SUCCESS;
 	}

@@ -1,0 +1,122 @@
+{
+    "Obj": [
+        {
+            "id": "位置ID",
+            "name": "位置名字",
+            "tool-id": "工具ID",
+            "tool-name": "工具名字"
+        },
+        {
+            "id": "13",
+            "name": "流程2",
+            "tool-id": "136",
+            "tool-name": "完美2"
+        },
+        {
+            "id": "14",
+            "name": "流程3",
+            "tool-id": "137",
+            "tool-name": "完美3"
+        },
+        {
+            "id": "18",
+            "name": "流程4",
+            "tool-id": "138",
+            "tool-name": "完美4"
+        },
+        {
+            "id": "19",
+            "name": "流程5",
+            "tool-id": "119",
+            "tool-name": "完美5"
+        },
+        {
+            "id": "_1",
+            "name": "start"
+        },
+        {
+            "id": "_3",
+            "name": "end"
+        }
+    ],
+    "Link": [
+        {
+            "from": "位置ID",
+            "to": "位置ID"
+        },
+        {
+            "from": "11",
+            "to": "8"
+        },
+        {
+            "from": "_1",
+            "to": "11"
+        },
+        {
+            "from": "18",
+            "to": "12"
+        },
+        {
+            "from": "19",
+            "to": "12"
+        },
+        {
+            "from": "11",
+            "to": "13"
+        },
+        {
+            "from": "11",
+            "to": "14"
+        },
+        {
+            "from": "8",
+            "to": "15"
+        },
+        {
+            "from": "16",
+            "to": "15"
+        },
+        {
+            "from": "13",
+            "to": "16"
+        },
+        {
+            "from": "14",
+            "to": "17"
+        },
+        {
+            "from": "16",
+            "to": "17"
+        },
+        {
+            "from": "15",
+            "to": "18"
+        },
+        {
+            "from": "17",
+            "to": "19"
+        }
+    ],
+    "Gateway": [
+        {
+            "id": "11",
+            "gatewayDirection": "Diverging"
+        },
+        {
+            "id": "12",
+            "gatewayDirection": "Converging"
+        },
+        {
+            "id": "15",
+            "gatewayDirection": "Converging"
+        },
+        {
+            "id": "16",
+            "gatewayDirection": "Diverging"
+        },
+        {
+            "id": "17",
+            "gatewayDirection": "Converging"
+        }
+    ]
+}

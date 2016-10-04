@@ -26,22 +26,28 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 
 	public FlowBasicInfo get(Integer id) throws DocumentException {
 		FlowBasicInfo info = dao.get(id);
-		info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+		if(info != null) {
+			info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+		}
 		return info;
 	}
 
 	public List<FlowBasicInfo> findAll() throws DocumentException {
 		List<FlowBasicInfo> infos = dao.findAll();
-		for (FlowBasicInfo info : infos) {
-			info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+		if(infos != null) {
+			for (FlowBasicInfo info : infos) {
+				info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+			}
 		}
 		return infos;
 	}
 
 	public List<FlowBasicInfo> findAll(Integer userId) throws DocumentException {
 		List<FlowBasicInfo> infos = dao.findAll(userId);
-		for (FlowBasicInfo info : infos) {
-			info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+		if(infos != null) {
+			for (FlowBasicInfo info : infos) {
+				info.setBpmn(XML2JSON.xml2JSON(info.getBpmn()));
+			}
 		}
 		return infos;
 	}
@@ -51,15 +57,19 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 	}
 
 	public Integer save(FlowBasicInfo entity) throws ParserConfigurationException {
-		if (entity.getBpmn().startsWith("{")) {
-			entity.setBpmn(JSON2XML.json2XML(entity.getId(), entity.getName(), entity.getBpmn()));
+		if(entity != null) {
+			if (entity.getBpmn().startsWith("{")) {
+				entity.setBpmn(JSON2XML.json2XML(entity.getId(), entity.getName(), entity.getBpmn()));
+			}
 		}
 		return dao.save(entity);
 	}
 
 	public void saveOrUpdate(FlowBasicInfo entity) throws ParserConfigurationException {
-		if (entity.getBpmn().startsWith("{")) {
-			entity.setBpmn(JSON2XML.json2XML(entity.getId(), entity.getName(), entity.getBpmn()));
+		if(entity != null) {
+			if (entity.getBpmn().startsWith("{")) {
+				entity.setBpmn(JSON2XML.json2XML(entity.getId(), entity.getName(), entity.getBpmn()));
+			}
 		}
 		dao.saveOrUpdate(entity);
 	}

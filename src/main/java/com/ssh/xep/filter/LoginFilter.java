@@ -14,13 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginFilter implements Filter {
 
 	public void init(FilterConfig filterConfig) throws ServletException {
-		System.out.println("==========init");
 	}
 
-	static int count=0;
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("FILTER IN: "+count++);
 		String path = ((HttpServletRequest)request).getServletPath();
 		if(path.equals("/") || path.equals("/login.action")) {
 			chain.doFilter(request, response);
@@ -30,13 +27,10 @@ public class LoginFilter implements Filter {
 			((HttpServletResponse)response).sendRedirect(root+"/login.action");
 			return;
 		}
-		System.out.println(((HttpServletRequest)request).getSession().getAttribute("userId"));
-		System.out.println("FILTER OUT");
 		chain.doFilter(request, response);
 	}
 
 	public void destroy() {
-		System.out.println("==========destroy");
 	}
 
 }

@@ -25,6 +25,7 @@ public class JSON2XML {
 	}
 
 	/**
+	 * 根据json重构bpmn文件
 	 * 将ID转换为_jbpm...开头 组成合适的bpmn文件
 	 * 
 	 * @throws ParserConfigurationException
