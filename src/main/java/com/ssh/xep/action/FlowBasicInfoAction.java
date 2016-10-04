@@ -83,14 +83,16 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		LOGGER.info("查询所有流程");
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
 		infos = service.findAll(userId);
+
 		return SUCCESS;
 	}
 
 	@Action("detail")
-	public String detail() throws DocumentException {
+	public String detail() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
+
 		return SUCCESS;
 	}
 
