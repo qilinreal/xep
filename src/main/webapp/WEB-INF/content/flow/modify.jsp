@@ -17,6 +17,7 @@
 <title>${create }流程</title>
 </head>
 <body>
-	${id }
+	<p>id is ${id }</p>
+	<p>${bpmn }</p>
 </body>
 </html>

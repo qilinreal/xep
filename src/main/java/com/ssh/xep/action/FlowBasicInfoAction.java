@@ -1,6 +1,7 @@
 package com.ssh.xep.action;
 
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -80,14 +81,16 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	}
 
 	@Action("detail")
-	public String detail() {
+	public String detail() throws DocumentException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
+		ServletActionContext.getRequest().setAttribute("bpmn", XML2JSON.xml2JSON(info.getBpmn()));
 		return SUCCESS;
 	}
 
-	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp") })
+	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp"),
+			@Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
 	public String modify() throws DocumentException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);

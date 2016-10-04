@@ -8,7 +8,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 
+import com.ssh.xep.util.MakeBpmn;
 import com.ssh.xep.util.XML2JSON;
 
 /**
@@ -24,6 +26,6 @@ public class App {
 		while((str=sc.nextLine()).equals("0") == false) {
 			xmlStr += str+"\n";
 		}
-		System.out.println(XML2JSON.xml2JSON(xmlStr));
+		System.out.println(DocumentHelper.parseText(xmlStr).asXML());
 	}
 }

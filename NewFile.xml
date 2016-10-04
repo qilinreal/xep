@@ -23,6 +23,10 @@
 				System.out.println("1000");}
 			</script>
 		</scriptTask>
+		<sequenceFlow id="_jbpm-unique-123-_3" sourceRef="_jbpm-unique-123"
+			targetRef="_3" />
+		<sequenceFlow id="_1-_jbpm-unique-123" sourceRef="_1"
+			targetRef="_jbpm-unique-123" />
 	</process>
 	<bpmndi:BPMNDiagram>
 		<bpmndi:BPMNPlane bpmnElement="com.sample.com.sample.hello" />
