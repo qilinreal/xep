@@ -20,6 +20,7 @@ import com.ssh.xep.entity.FlowBasicInfo;
 import com.ssh.xep.service.FlowBasicInfoService;
 
 @Namespace("/flow")
+@Result(name = ActionSupport.ERROR, location = "/WEB-INF/error.jsp")
 public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<FlowBasicInfo>, Preparable {
 
 	private static final long serialVersionUID = -7988746546869953899L;
@@ -69,20 +70,20 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		return SUCCESS;
 	}
 
-	@Action(value = "detail", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp") })
+	@Action(value = "detail")
 	public String detail() throws DocumentException, ParserConfigurationException {
 		Integer id = info.getId();
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
 		if (info == null) {
+			ServletActionContext.getRequest().setAttribute("errorInformation", "找不到对象呀。");
 			return ERROR;
 		}
 
 		return SUCCESS;
 	}
 
-	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error.jsp"),
-			@Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
+	@Action(value = "modify", results = { @Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
 	public String modify() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
@@ -105,8 +106,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		return SUCCESS;
 	}
 
-	@Action(value = "modify-commit", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp"),
-			@Result(name = ERROR, location = "/WEB-INF/error.jsp") })
+	@Action(value = "modify-commit", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp") })
 	public String modifyCommit() throws ParserConfigurationException {
 		if (info.getBpmn() == null || info.getBpmn().equals("") || info.getId() == 0) {
 			ServletActionContext.getRequest().setAttribute("errorInformation", "数据缺失");

@@ -18,6 +18,7 @@ import com.ssh.xep.service.JobInfoService;
 import com.ssh.xep.util.JobJSON;
 
 @Namespace("/job")
+@Result(name = "error", location = "/WEB-INF/error.jsp")
 public class JobInfoAction extends ActionSupport implements ModelDriven<JobInfo>, Preparable {
 
 	private static final long serialVersionUID = -7988746546869953899L;
@@ -63,9 +64,13 @@ public class JobInfoAction extends ActionSupport implements ModelDriven<JobInfo>
 	@Action(value = "start", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp") })
 	public String execute() throws Exception {
 		LOGGER.info("启动指定任务");
-		Integer flowBasicInfoId = Integer.parseInt(ServletActionContext.getRequest().getParameter("flowBasicInfoId"));
+		String flowBasicInfoId = ServletActionContext.getRequest().getParameter("flowBasicInfoId");
+		if (flowBasicInfoId == null) {
+			ServletActionContext.getRequest().setAttribute("errorInformation", "流程ID缺失");
+			return ERROR;
+		}
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
-		FlowBasicInfo flowInfo = flowService.get(flowBasicInfoId);
+		FlowBasicInfo flowInfo = flowService.get(Integer.parseInt(flowBasicInfoId));
 		JobJSON json = new JobJSON();
 		json.init(flowInfo.getBpmn());
 		info = new JobInfo();
