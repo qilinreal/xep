@@ -8,16 +8,15 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.spring.StrutsSpringObjectFactory;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
-import com.ssh.xep.SpringContextHolder;
 import com.ssh.xep.entity.FlowBasicInfo;
+import com.ssh.xep.entity.Tool;
 import com.ssh.xep.service.FlowBasicInfoService;
+import com.ssh.xep.service.ToolService;
 
 @Namespace("/flow")
 @Result(name = ActionSupport.ERROR, location = "/WEB-INF/error.jsp")
@@ -29,9 +28,13 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	private FlowBasicInfo info;
 	private List<FlowBasicInfo> infos;
+	private List<Tool> tools;
 
 	@Autowired
 	private FlowBasicInfoService service;
+
+	@Autowired
+	private ToolService toolService;
 
 	public FlowBasicInfo getInfo() {
 		return info;
@@ -47,6 +50,14 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	public void setInfos(List<FlowBasicInfo> infos) {
 		this.infos = infos;
+	}
+
+	public List<Tool> getTools() {
+		return tools;
+	}
+
+	public void setTools(List<Tool> tools) {
+		this.tools = tools;
 	}
 
 	public void prepare() throws Exception {
@@ -87,6 +98,9 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	public String modify() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
+		Integer userId = Integer
+				.parseInt((String) ServletActionContext.getRequest().getSession().getAttribute("userId"));
+		tools = toolService.findAll(userId);
 		if (id == null) {
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
@@ -101,7 +115,6 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 				ServletActionContext.getRequest().setAttribute("errorInformation", "找不到对象呀。");
 				return ERROR;
 			}
-			System.out.println(info.getBpmn());
 		}
 		return SUCCESS;
 	}

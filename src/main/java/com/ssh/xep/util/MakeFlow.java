@@ -12,9 +12,14 @@ public class MakeFlow {
 	public MakeBpmn getBpmn() {
 		return bpmn;
 	}
-	
+
 	// 添加工具
 	// 工具是获取工具ID的，执行程序的时候，会根据工具ID获取工具位置，然后执行工具
+	// 获取工具这个功能是在JBPM执行时实现的
+	/*
+	 * String path = conn.executeSql("select toolPath from tool where toolId = [toolId]");
+	 * Process p = Process.execute("path");
+	 */
 	public void addTask(String id, String name, String toolId, String toolName) {
 	}
 
