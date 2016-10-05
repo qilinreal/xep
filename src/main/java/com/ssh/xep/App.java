@@ -16,6 +16,7 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
 
+import com.ssh.xep.util.JobJSON;
 import com.ssh.xep.util.MakeBpmn;
 import com.ssh.xep.util.XML2JSON;
 
@@ -26,5 +27,15 @@ import com.ssh.xep.util.XML2JSON;
 public class App {
 	public static void main(String[] args) throws ParserConfigurationException, TransformerFactoryConfigurationError,
 			TransformerException, UnsupportedEncodingException, DocumentException {
+		Scanner sc = new Scanner(System.in);
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+		while((line=sc.nextLine()).equals("0") == false) {
+			sb.append(line);
+			sb.append("\n");
+		}
+		JobJSON json = new JobJSON();
+		json.init(sb.toString());
+		System.out.println(json.getJSON());
 	}
 }

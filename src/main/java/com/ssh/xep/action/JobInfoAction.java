@@ -5,13 +5,17 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
+import com.ssh.xep.entity.FlowBasicInfo;
 import com.ssh.xep.entity.JobInfo;
+import com.ssh.xep.service.FlowBasicInfoService;
 import com.ssh.xep.service.JobInfoService;
+import com.ssh.xep.util.JobJSON;
 
 @Namespace("/job")
 public class JobInfoAction extends ActionSupport implements ModelDriven<JobInfo>, Preparable {
@@ -20,20 +24,13 @@ public class JobInfoAction extends ActionSupport implements ModelDriven<JobInfo>
 
 	private static final Logger LOGGER = Logger.getLogger(JobInfoAction.class);
 
-	private Integer id;
 	private JobInfo info;
 	private List<JobInfo> infos;
 
 	@Autowired
 	private JobInfoService service;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	@Autowired
+	private FlowBasicInfoService flowService;
 
 	public JobInfo getInfo() {
 		return info;
@@ -55,24 +52,26 @@ public class JobInfoAction extends ActionSupport implements ModelDriven<JobInfo>
 	}
 
 	public JobInfo getModel() {
-		if (id != null) {
-			try {
-				info = service.get(id);
-			} catch (DocumentException e) {
-				e.printStackTrace();
-			}
-		} else {
-			info = new JobInfo();
+		if (info != null) {
+			return info;
 		}
+		info = new JobInfo();
 		return info;
 	}
 
 	@Override
-	@Action("view")
+	@Action(value = "start", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp") })
 	public String execute() throws Exception {
-		LOGGER.info("查询所有流程");
+		LOGGER.info("启动指定任务");
+		Integer flowBasicInfoId = Integer.parseInt(ServletActionContext.getRequest().getParameter("flowBasicInfoId"));
 		Integer userId = (Integer) (ServletActionContext.getRequest().getSession().getAttribute("userId"));
-		infos = service.findAll(userId);
+		FlowBasicInfo flowInfo = flowService.get(flowBasicInfoId);
+		JobJSON json = new JobJSON();
+		json.init(flowInfo.getBpmn());
+		info = new JobInfo();
+		info.setUserId(userId);
+		info.setProcessInfo(json.getJSON());
+		service.save(info);
 
 		return SUCCESS;
 	}

@@ -26,20 +26,11 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	private static final Logger LOGGER = Logger.getLogger(FlowBasicInfoAction.class);
 
-	private Integer id;
 	private FlowBasicInfo info;
 	private List<FlowBasicInfo> infos;
 
 	@Autowired
 	private FlowBasicInfoService service;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public FlowBasicInfo getInfo() {
 		return info;
@@ -61,15 +52,10 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	}
 
 	public FlowBasicInfo getModel() {
-		if (id != null) {
-			try {
-				info = service.get(id);
-			} catch (DocumentException e) {
-				e.printStackTrace();
-			}
-		} else {
-			info = new FlowBasicInfo();
+		if (info != null) {
+			return info;
 		}
+		info = new FlowBasicInfo();
 		return info;
 	}
 
@@ -85,25 +71,17 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	@Action(value = "detail", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp") })
 	public String detail() throws DocumentException, ParserConfigurationException {
-		String id = ServletActionContext.getRequest().getParameter("id");
+		Integer id = info.getId();
 		LOGGER.info("查看某个流程详细信息： " + id);
 		info = service.get(Integer.valueOf(id));
 		if (info == null) {
 			return ERROR;
 		}
-		
-		ApplicationContext ac = SpringContextHolder.getApplicationContext();
-		System.out.println("-------------------------------------");
-		System.out.println(ac.getApplicationName());
-		System.out.println(ac.containsBean("com.ssh.xep.action.FlowBasicInfoAction"));
-		for(String s : ac.getBeanDefinitionNames()) {
-			System.out.println(s);
-		}
 
 		return SUCCESS;
 	}
 
-	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error/no-object.jsp"),
+	@Action(value = "modify", results = { @Result(name = "error", location = "/WEB-INF/error.jsp"),
 			@Result(name = SUCCESS, location = "/WEB-INF/content/flow/modify.jsp") })
 	public String modify() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
@@ -119,10 +97,26 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 			ServletActionContext.getRequest().setAttribute("create", "修改");
 			info = service.get(Integer.parseInt(id));
 			if (info == null) {
+				ServletActionContext.getRequest().setAttribute("errorInformation", "找不到对象呀。");
 				return ERROR;
 			}
 			System.out.println(info.getBpmn());
 		}
+		return SUCCESS;
+	}
+
+	@Action(value = "modify-commit", results = { @Result(name = SUCCESS, location = "/WEB-INF/success.jsp"),
+			@Result(name = ERROR, location = "/WEB-INF/error.jsp") })
+	public String modifyCommit() throws ParserConfigurationException {
+		if (info.getBpmn() == null || info.getBpmn().equals("") || info.getId() == 0) {
+			ServletActionContext.getRequest().setAttribute("errorInformation", "数据缺失");
+			return ERROR;
+		}
+		if (info.getUserId() == 0) {
+			Integer userId = (Integer) ServletActionContext.getRequest().getSession().getAttribute("userId");
+			info.setUserId(userId);
+		}
+		service.saveOrUpdate(info);
 		return SUCCESS;
 	}
 }
