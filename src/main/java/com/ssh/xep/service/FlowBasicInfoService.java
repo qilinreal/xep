@@ -14,15 +14,16 @@ public interface FlowBasicInfoService {
 	FlowBasicInfo get(Integer id) throws DocumentException;
 
 	List<FlowBasicInfo> findAll() throws DocumentException;
-	
+
 	List<FlowBasicInfo> findAll(Integer userId) throws DocumentException;
 
 	void pessist(FlowBasicInfo entity);
 
 	/**
-	 * @param entity 传入的实体
+	 * @param entity
+	 *            传入的实体
 	 * @return 生成的ID
-	 * @throws ParserConfigurationException 
+	 * @throws ParserConfigurationException
 	 */
 	Integer save(FlowBasicInfo entity) throws ParserConfigurationException;
 
