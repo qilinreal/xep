@@ -12,7 +12,7 @@ import com.ssh.xep.dao.ToolDao;
 import com.ssh.xep.entity.Tool;
 import com.ssh.xep.service.ToolService;
 
-@Service("jobInfoService")
+@Service("toolService")
 public class ToolServiceImpl implements ToolService {
 	@Autowired
 	private ToolDao dao;

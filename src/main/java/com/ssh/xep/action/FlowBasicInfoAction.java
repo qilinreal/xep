@@ -98,14 +98,14 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	public String modify() throws DocumentException, ParserConfigurationException {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		LOGGER.info("修改或者创建某个流程： " + id);
-		Integer userId = Integer
-				.parseInt((String) ServletActionContext.getRequest().getSession().getAttribute("userId"));
+		Integer userId = (Integer) ServletActionContext.getRequest().getSession().getAttribute("userId");
 		tools = toolService.findAll(userId);
 		if (id == null) {
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
 			info.setBpmn("");
 			info.setFlowNum(0);
+			info.setUserId(userId);
 			info.setName("NO NAME");
 			id = String.valueOf(service.save(info));
 		} else {
