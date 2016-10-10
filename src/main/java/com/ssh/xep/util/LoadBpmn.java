@@ -35,7 +35,7 @@ public class LoadBpmn {
 	 * @param jobId
 	 *            数据库中的job的ID
 	 * @param userRoot
-	 *            用户根目录
+	 *            用户根目录，目前是tmp文件夹下的xep_【userId】文件夹
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
@@ -51,7 +51,14 @@ public class LoadBpmn {
 		if (userRoot.endsWith("/") == false) {
 			userRoot += "/";
 		}
-		File bpmnFile = new File(userRoot + "bin/com/jbpm/" + userId + "_" + jobId + ".bpmn");
+		File bpmnDir = new File(userRoot + "bpmn/");
+		if(bpmnDir.isDirectory() == false) {
+			bpmnDir.delete();
+		}
+		if(bpmnDir.exists() == false) {
+			bpmnDir.mkdirs();
+		}
+		File bpmnFile = new File(userRoot + "bpmn/" + userId + "_" + jobId + ".bpmn");
 		if (bpmnFile.exists()) {
 			bpmnFile.delete();
 		}

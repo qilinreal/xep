@@ -20,6 +20,8 @@ public class JobInfo implements Serializable {
 	private int flowBasicInfoId;
 	private String fileCharMap;
 	private String processInfo;
+	private long bgTime;
+	private long edTime;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -66,5 +68,23 @@ public class JobInfo implements Serializable {
 
 	public void setProcessInfo(String processInfo) {
 		this.processInfo = processInfo;
+	}
+
+	@Column(name = "bgTime")
+	public long getBgTime() {
+		return bgTime;
+	}
+
+	public void setBgTime(long bgTime) {
+		this.bgTime = bgTime;
+	}
+
+	@Column(name = "edTime")
+	public long getEdTime() {
+		return edTime;
+	}
+
+	public void setEdTime(long edTime) {
+		this.edTime = edTime;
 	}
 }
