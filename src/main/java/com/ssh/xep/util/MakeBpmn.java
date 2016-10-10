@@ -32,9 +32,11 @@ public class MakeBpmn {
 
 	/**
 	 * 初始化，创建bpmn文件的雏形
-	 * @param loadName 执行bpmn文件时需要的名字，会被冠以前缀，作为id存在
-	 * id是loadNamePrefix【loadName】
-	 * @param name bpmn文件中process的name
+	 * 
+	 * @param loadName
+	 *            执行bpmn文件时需要的名字，会被冠以前缀，作为id存在 id是loadNamePrefix【loadName】
+	 * @param name
+	 *            bpmn文件中process的name
 	 * @throws ParserConfigurationException
 	 */
 	public MakeBpmn(String loadName, String name) throws ParserConfigurationException {
@@ -63,7 +65,14 @@ public class MakeBpmn {
 		e1.addAttribute("id", loadNamePrefix + loadName);
 		e1.addAttribute("name", name);
 
-		e1.addElement("extensionElements");
+		Element imp = e1.addElement("extensionElements");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "com.jbpm.jbpm.App");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name",
+				"com.ssh.xep.util.process.Process");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.Connection");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.Connection");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.PreparedStatement");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.ResultSet");
 		Element eStart = e1.addElement("startEvent");
 		eStart.addAttribute("id", "_1");
 		eStart.addAttribute("isInterrupting", "true");
@@ -91,7 +100,8 @@ public class MakeBpmn {
 	 *            引用包
 	 * @throws IOException
 	 */
-	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts) throws IOException {
+	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts)
+			throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
 		BufferedReader br = new BufferedReader(isr);
@@ -171,8 +181,11 @@ public class MakeBpmn {
 
 	/**
 	 * 将不同id的script联系在一起，会判断_1和_3
-	 * @param fromId 源id，会被加上前缀
-	 * @param toId 目的id，会被加上前缀
+	 * 
+	 * @param fromId
+	 *            源id，会被加上前缀
+	 * @param toId
+	 *            目的id，会被加上前缀
 	 */
 	public void addConnection(String fromId, String toId) {
 		String sourceRef = fromId;
@@ -191,7 +204,8 @@ public class MakeBpmn {
 	/**
 	 * 添加分开节点
 	 * 
-	 * @param gatewayId 会被加上前缀
+	 * @param gatewayId
+	 *            会被加上前缀
 	 */
 	public void addDiverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;
@@ -202,7 +216,8 @@ public class MakeBpmn {
 	/**
 	 * 添加合并节点
 	 * 
-	 * @param gatewayId 会被加上前缀
+	 * @param gatewayId
+	 *            会被加上前缀
 	 */
 	public void addConverging(String gatewayId) {
 		String id = "_jbpm-unique-" + gatewayId;
@@ -213,7 +228,7 @@ public class MakeBpmn {
 	public String get() throws TransformerFactoryConfigurationError, TransformerException {
 		return xml.asXML();
 	}
-	
+
 	public Document getXML() {
 		return xml;
 	}
