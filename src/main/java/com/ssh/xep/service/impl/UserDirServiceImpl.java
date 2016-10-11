@@ -12,7 +12,7 @@ import com.ssh.xep.dao.UserDirDao;
 import com.ssh.xep.entity.UserDir;
 import com.ssh.xep.service.UserDirService;
 
-@Service("toolService")
+@Service("userDirService")
 public class UserDirServiceImpl implements UserDirService {
 	@Autowired
 	private UserDirDao dao;

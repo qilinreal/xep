@@ -1,5 +1,9 @@
 package com.ssh.xep.util;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,35 +29,47 @@ public class MakeFlow {
 	 * String path = conn.executeSql("select toolPath from tool where toolId = [toolId]");
 	 * Process p = Process.execute("path");
 	 */
-	public void addTask(String id, String name, String toolId, String toolName, String toolType, String toolPath, JSONArray toolInfo, String addOn) {
+	public void addTask(String id, String name, String toolId, String toolName, String toolType, String toolPath, JSONArray toolInfo, String addOn) throws IOException {
+		FileInputStream fis = new FileInputStream("bpmn_script_template.dat");
 		StringBuilder sb = new StringBuilder();
-		sb.append("String command=");
-		sb.append(toolName);
+		String line;
+		BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+		while((line=br.readLine()) != null) {
+			sb.append(line);
+			sb.append("\n");
+		}
+		String template = sb.toString();
+		fis.close();
+		sb = new StringBuilder();
+		if(toolType.equals("java")) {
+			sb.append("java -jar ");
+		} else if(toolType.equals("python")) {
+			sb.append("python ");
+		} else if(toolType.equals("shell")) {
+			sb.append("/bin/bash ");
+		} else if(toolType.equals("perl")) {
+			sb.append("perl ");
+		}
+		sb.append(toolPath);
 		Iterator<JSONObject> it = toolInfo.iterator();
 		while(it.hasNext()) {
 			JSONObject obj = it.next();
 			String type = obj.getString("type");
-			if(type.equals("dbInputFile")) {
-				
-			} else if(type.equals("idInputFile")) {
-				
-			} else if(type.equals("dbOutputFile")) {
-				
-			} else if(type.equals("idOutputFile")) {
-				
-			} else if(type.equals("integer")) {
-				
-			} else if(type.equals("float")) {
-				
-			} else if(type.equals("boolean")) {
-				
-			} else if(type.equals("text")) {
-				
-			} else if(type.equals("select")) {
-				
+			if(type.startsWith("db")) {
+				sb.append(obj.getString("path"));
+				sb.append(" ");
+			} else if(type.startsWith("id")) {
+				sb.append("$");
+				sb.append(obj.getString("value"));
+				sb.append(" ");
+			} else {
+				sb.append(obj.getString("value"));
+				sb.append(" ");
 			}
 		}
-		bpmn.addTask(id, name, Integer.parseInt(toolId), toolName, sb.toString(), addOn);
+		String command = sb.toString();
+		template = String.format(template, command, id);
+		bpmn.addTask(id, name, Integer.parseInt(toolId), toolName, toolType, toolPath, template, addOn);
 	}
 
 	// 给不同ID之间添加连接

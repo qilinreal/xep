@@ -69,9 +69,13 @@ public class MakeBpmn {
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "com.jbpm.jbpm.App");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name",
 				"com.ssh.xep.util.process.Process");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.util.Iterator");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.util.Date");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.Connection");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.PreparedStatement");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.ResultSet");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "net.sf.json.JSONArray");
+		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "net.sf.json.JSONObject");
 		Element eStart = e1.addElement("startEvent");
 		eStart.addAttribute("id", "_1");
 		eStart.addAttribute("isInterrupting", "true");
@@ -84,8 +88,9 @@ public class MakeBpmn {
 		plane.addAttribute("bpmnElement", loadNamePrefix + loadName);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String addOn) throws IOException {
-		addTask(taskId, name, toolId, toolName, scriptFile, null, addOn);
+	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
+			File scriptFile, String addOn) throws IOException {
+		addTask(taskId, name, toolId, toolName, toolType, toolPath, scriptFile, null, addOn);
 	}
 
 	/**
@@ -99,8 +104,8 @@ public class MakeBpmn {
 	 *            引用包
 	 * @throws IOException
 	 */
-	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts, String addOn)
-			throws IOException {
+	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
+			File scriptFile, String exts, String addOn) throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
 		BufferedReader br = new BufferedReader(isr);
@@ -112,18 +117,20 @@ public class MakeBpmn {
 		}
 		fis.close();
 
-		addTask(taskId, name, toolId, toolName, sb.toString(), exts, addOn);
+		addTask(taskId, name, toolId, toolName, toolType, toolPath, sb.toString(), exts, addOn);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, String script, String addOn) {
-		addTask(taskId, name, toolId, toolName, script, (String) null, addOn);
+	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
+			String script, String addOn) {
+		addTask(taskId, name, toolId, toolName, toolType, toolPath, script, (String) null, addOn);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, String script, String exts, String addOn) {
+	public void addTask(String taskId, String name, int toolId, String toolName, String toolType, String toolPath,
+			String script, String exts, String addOn) {
 		if (exts != null) {
-			addTask(taskId, name, toolId, toolName, script, exts.split(";"), addOn);
+			addTask(taskId, name, toolId, toolName, toolType, toolPath, script, exts.split(";"), addOn);
 		} else {
-			addTask(taskId, name, toolId, toolName, script, (String[]) null, addOn);
+			addTask(taskId, name, toolId, toolName, toolType, toolPath, script, (String[]) null, addOn);
 		}
 	}
 
@@ -137,7 +144,8 @@ public class MakeBpmn {
 	 * @param exts
 	 *            引用包，完整形式，包含import
 	 */
-	public void addTask(String taskId, String dataName, int toolId, String toolName, String script, String[] exts, String addOn) {
+	public void addTask(String taskId, String dataName, int toolId, String toolName, String toolType, String toolPath,
+			String script, String[] exts, String addOn) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
 			e = e.element("process").element("extensionElements");
@@ -175,8 +183,10 @@ public class MakeBpmn {
 		e.addAttribute("data-name", dataName);
 		e.addAttribute("tool-id", String.valueOf(toolId));
 		e.addAttribute("tool-name", String.valueOf(toolName));
+		e.addAttribute("tool-type", String.valueOf(toolType));
+		e.addAttribute("tool-path", String.valueOf(toolPath));
 		e.addElement("script").addText(script);
-		if(addOn == null) {
+		if (addOn == null) {
 			addOn = "";
 		}
 		e.addElement("addOn").addText(addOn);

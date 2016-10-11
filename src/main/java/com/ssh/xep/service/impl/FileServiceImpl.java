@@ -12,7 +12,7 @@ import com.ssh.xep.dao.FileDao;
 import com.ssh.xep.entity.File;
 import com.ssh.xep.service.FileService;
 
-@Service("toolService")
+@Service("fileService")
 public class FileServiceImpl implements FileService {
 	@Autowired
 	private FileDao dao;
