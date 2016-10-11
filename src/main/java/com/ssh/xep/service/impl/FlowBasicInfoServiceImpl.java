@@ -32,10 +32,6 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 	@Autowired
 	private FlowBasicInfoDao dao;
 	@Autowired
-	private ToolsDao toolDao;
-	@Autowired
-	private ToolTypesDao toolTypeDao;
-	@Autowired
 	private FileDao fileDao;
 	@Autowired
 	private DirectoryDao dirDao;
@@ -77,6 +73,9 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 		dao.persist(entity);
 	}
 
+	/**
+	 * 获取从数据库中取的文件的绝对路径
+	 */
 	private String fixPath(String jsonStr) {
 		JSONObject obj = JSONObject.fromObject(jsonStr);
 		JSONArray infos = obj.getJSONArray("Obj");
@@ -129,7 +128,7 @@ public class FlowBasicInfoServiceImpl implements FlowBasicInfoService {
 			sb.append(pl.pollLast());
 			sb.append("/");
 		}
-		
+
 		sb.append(file.getName());
 		return sb.toString();
 	}

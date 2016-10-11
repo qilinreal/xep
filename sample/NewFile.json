@@ -12,9 +12,14 @@
                     "id": "参数ID，用来唯一表示这个参数，并且，在这个数组里，顺序应当是确定的，跟命令的输入顺序一样",
                     "name": "参数的名字",
                     "type": "dbInputFile 代表来自数据库的文件 idInputFile 代表来自流程输出位置的文件，格式为【位置ID】_【参数ID】 dbOutputFile idOutputFile value部分为空 integer float boolean text select 代表参数 fixed代表固定值",
-                    "value": "如果db开头则储存文件ID，如果是select则记录select的值，fixed则预先填写数据【客户端填写】",
+                    "value": "如果db开头则储存文件ID，如果是select则记录select的值，fixed则预先填写数据，但是不显示出来【客户端填写】",
                     "size": "如果是参数并且不是select则有size，参数是从服务器端获取，传到客户端的",
-                    "select": ["如果参数是select则此处是一个数组，储存选项"],
+                    "select": [
+                        {
+                            "label": "如果参数是select则此处是一个数组，储存选项",
+                            "value": "真实的值"
+                        }
+                    ],
                     "path": "如果是dbFile则有此选项，但选项是从客户端传到服务器端后，服务器端解析的"
                 }
             ],

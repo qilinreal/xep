@@ -32,4 +32,10 @@ public interface ToolsService {
 	void delete(Integer id);
 
 	void flush();
+
+	/**
+	 * 因为现在还不明确数据库中存的是路径还是文件本身，因此使用这一个中间方法加以过渡
+	 * @return
+	 */
+	String getXML(String xmlOrPath);
 }

@@ -34,6 +34,9 @@ public class XML2JSON {
 			t.put("name", n.attributeValue("data-name"));
 			t.put("tool-id", n.attributeValue("tool-id"));
 			t.put("tool-name", n.attributeValue("tool-name"));
+			t.put("tool-type", n.attributeValue("tool-type"));
+			t.put("tool-path", n.attributeValue("tool-path"));
+			t.put("tool-info", n.element("addOn").getText());
 			obj.add(t);
 		}
 		if (true) {

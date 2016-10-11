@@ -14,8 +14,10 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
 import com.ssh.xep.entity.FlowBasicInfo;
+import com.ssh.xep.entity.ToolTypes;
 import com.ssh.xep.entity.Tools;
 import com.ssh.xep.service.FlowBasicInfoService;
+import com.ssh.xep.service.ToolTypesService;
 import com.ssh.xep.service.ToolsService;
 
 @Namespace("/flow")
@@ -29,12 +31,16 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 	private FlowBasicInfo info;
 	private List<FlowBasicInfo> infos;
 	private List<Tools> tools;
+	private List<ToolTypes> toolTypes;
 
 	@Autowired
 	private FlowBasicInfoService service;
 
 	@Autowired
 	private ToolsService toolService;
+
+	@Autowired
+	private ToolTypesService toolTypesService;
 
 	public FlowBasicInfo getInfo() {
 		return info;
@@ -100,6 +106,7 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		LOGGER.info("修改或者创建某个流程： " + id);
 		Integer userId = (Integer) ServletActionContext.getRequest().getSession().getAttribute("userId");
 		tools = toolService.findAll(userId);
+		toolTypes = toolTypesService.findAll();
 		if (id == null) {
 			ServletActionContext.getRequest().setAttribute("create", "创建");
 			info = new FlowBasicInfo();
