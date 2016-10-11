@@ -8,41 +8,41 @@ import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssh.xep.dao.ToolDao;
-import com.ssh.xep.entity.Tool;
-import com.ssh.xep.service.ToolService;
+import com.ssh.xep.dao.UserDirDao;
+import com.ssh.xep.entity.UserDir;
+import com.ssh.xep.service.UserDirService;
 
 @Service("toolService")
-public class ToolServiceImpl implements ToolService {
+public class UserDirServiceImpl implements UserDirService {
 	@Autowired
-	private ToolDao dao;
+	private UserDirDao dao;
 
 	@Deprecated
-	public Tool load(Integer id) {
+	public UserDir load(Integer id) {
 		return dao.load(id);
 	}
 
-	public Tool get(Integer id) throws DocumentException {
+	public UserDir get(Integer id) throws DocumentException {
 		return dao.get(id);
 	}
 
-	public List<Tool> findAll() throws DocumentException {
+	public List<UserDir> findAll() throws DocumentException {
 		return dao.findAll();
 	}
 
-	public List<Tool> findAll(Integer userId) throws DocumentException {
+	public List<UserDir> findAll(Integer userId) throws DocumentException {
 		return dao.findAll(userId);
 	}
 
-	public void pessist(Tool entity) {
+	public void pessist(UserDir entity) {
 		dao.persist(entity);
 	}
 
-	public Integer save(Tool entity) throws ParserConfigurationException {
+	public Integer save(UserDir entity) throws ParserConfigurationException {
 		return dao.save(entity);
 	}
 
-	public void saveOrUpdate(Tool entity) throws ParserConfigurationException {
+	public void saveOrUpdate(UserDir entity) throws ParserConfigurationException {
 		dao.saveOrUpdate(entity);
 	}
 

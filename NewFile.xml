@@ -13,6 +13,9 @@
 		<extensionElements>
 			<tns:import name="com.ssh.xep.util.process.Process" />
 			<tns:import name="com.jbpm.jbpm.App" />
+			<tns:import name="java.sql.Connection" />
+			<tns:import name="java.sql.PreparedStatement" />
+			<tns:import name="java.sql.ResultSet" />
 		</extensionElements>
 		<!-- nodes -->
 		<startEvent id="_1" isInterrupting="true">
@@ -21,15 +24,43 @@
 			<terminateEventDefinition />
 		</endEvent>
 		<scriptTask id="_jbpm-unique-8" name="Script" data-name="流程1"
-			tool-id="135" tool-name="完美1" scriptFormat="http://www.java.com/java">
+			tool-id="135" tool-name="完美1" tool-type ="java" tool-path="/tmp/tool.jar"
+			scriptFormat="http://www.java.com/java">
 			<script>
-				String commandStr = "tool p1 p2 input1 input2 ${input_from_id}";
+				String commandStr = "tool p1 p2 input1 input2 output1
+				output2"; // 路径输入前就决定了
+				int toolId = 135;
 				// 单例模式
 				// 数据库查询
-				// App.getConnection().
-				Process p = new Process();
-				p.create("这里是工具的路径", "这里是参数", "参数", "参数");
+				Connection
+				conn = App.getConnection().
+				PreparedStatement ps =
+				conn.preparedStatement("select * from tools where id=?");
+				ps.setInt(1, 135);
+				ResultSet rs = ps.executeQuery();
+				rs.next();
+				String
+				absToolPath = rs.getString("");
+				rs.close();
+				ps.close();
+				Process p = new
+				Process();
+				p.create("这里是工具的路径 absToolPath", "这里是参数", "参数", "参数");
 			</script>
+			<addOn>
+				<!-- 这里是附加信息，存储JSON字符串 -->
+				[
+	                {
+	                    "id": "参数ID，用来唯一表示这个参数，并且，在这个数组里，顺序应当是确定的，跟命令的输入顺序一样",
+	                    "name": "参数的名字",
+	                    "type": "dbInputFile 代表来自数据库的文件 idInputFile 代表来自流程输出位置的文件，格式为【位置ID】_【参数ID】 dbOutputFile idOutputFile value部分为空 integer float boolean text select 代表参数",
+	                    "value": "如果是idOutputFile则为空，【客户端填写】",
+	                    "size": "如果是参数并且不是select则有size，参数是从服务器端获取，传到客户端的",
+	                    "select": ["如果参数是select则此处是一个数组，储存选项"],
+	                    "path": "如果是dbFile则有此选项，但选项是从客户端传到服务器端后，服务器端解析的"
+	                }
+	            ]
+			</addOn>
 		</scriptTask>
 		<parallelGateway id="_jbpm-unique-11" name="Gateway"
 			gatewayDirection="Diverging">

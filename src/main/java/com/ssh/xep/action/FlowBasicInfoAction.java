@@ -14,9 +14,9 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
 import com.ssh.xep.entity.FlowBasicInfo;
-import com.ssh.xep.entity.Tool;
+import com.ssh.xep.entity.Tools;
 import com.ssh.xep.service.FlowBasicInfoService;
-import com.ssh.xep.service.ToolService;
+import com.ssh.xep.service.ToolsService;
 
 @Namespace("/flow")
 @Result(name = ActionSupport.ERROR, location = "/WEB-INF/error.jsp")
@@ -28,13 +28,13 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 
 	private FlowBasicInfo info;
 	private List<FlowBasicInfo> infos;
-	private List<Tool> tools;
+	private List<Tools> tools;
 
 	@Autowired
 	private FlowBasicInfoService service;
 
 	@Autowired
-	private ToolService toolService;
+	private ToolsService toolService;
 
 	public FlowBasicInfo getInfo() {
 		return info;
@@ -52,11 +52,11 @@ public class FlowBasicInfoAction extends ActionSupport implements ModelDriven<Fl
 		this.infos = infos;
 	}
 
-	public List<Tool> getTools() {
+	public List<Tools> getTools() {
 		return tools;
 	}
 
-	public void setTools(List<Tool> tools) {
+	public void setTools(List<Tools> tools) {
 		this.tools = tools;
 	}
 

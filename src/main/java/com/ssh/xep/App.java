@@ -15,7 +15,5 @@ import com.ssh.xep.util.MakeBpmn;
 public class App {
 	public static void main(String[] args) throws ParserConfigurationException, TransformerFactoryConfigurationError,
 			TransformerException, UnsupportedEncodingException, DocumentException {
-		MakeBpmn bpmn = new MakeBpmn("cccc");
-		bpmn.addTask("123", "ccccc", 123, "cais", "this is a script");
 	}
 }

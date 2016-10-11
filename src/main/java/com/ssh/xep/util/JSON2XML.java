@@ -25,8 +25,7 @@ public class JSON2XML {
 	}
 
 	/**
-	 * 根据json重构bpmn文件
-	 * 将ID转换为_jbpm...开头 组成合适的bpmn文件
+	 * 根据json重构bpmn文件 将ID转换为_jbpm...开头 组成合适的bpmn文件
 	 * 
 	 * @throws ParserConfigurationException
 	 */
@@ -39,7 +38,9 @@ public class JSON2XML {
 		Iterator<Object> it = obj.iterator();
 		while (it.hasNext()) {
 			JSONObject o = (JSONObject) it.next();
-			flow.addTask(o.getString("id"), o.getString("name"), o.getString("tool-id"), o.getString("tool-name"));
+			flow.addTask(o.getString("id"), o.getString("name"), o.getString("tool-id"), o.getString("tool-name"),
+					o.getString("tool-type"), o.getString("tool-path"), o.getJSONArray("tool-info"),
+					o.getJSONArray("tool-info").toString());
 		}
 
 		it = link.iterator();

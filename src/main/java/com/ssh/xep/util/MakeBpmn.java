@@ -70,7 +70,6 @@ public class MakeBpmn {
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name",
 				"com.ssh.xep.util.process.Process");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.Connection");
-		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.Connection");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.PreparedStatement");
 		imp.addElement("tns:import", "http://www.jboss.org/drools").addAttribute("name", "java.sql.ResultSet");
 		Element eStart = e1.addElement("startEvent");
@@ -85,8 +84,8 @@ public class MakeBpmn {
 		plane.addAttribute("bpmnElement", loadNamePrefix + loadName);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile) throws IOException {
-		addTask(taskId, name, toolId, toolName, scriptFile, null);
+	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String addOn) throws IOException {
+		addTask(taskId, name, toolId, toolName, scriptFile, null, addOn);
 	}
 
 	/**
@@ -100,7 +99,7 @@ public class MakeBpmn {
 	 *            引用包
 	 * @throws IOException
 	 */
-	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts)
+	public void addTask(String taskId, String name, int toolId, String toolName, File scriptFile, String exts, String addOn)
 			throws IOException {
 		FileInputStream fis = new FileInputStream(scriptFile);
 		InputStreamReader isr = new InputStreamReader(fis);
@@ -113,18 +112,18 @@ public class MakeBpmn {
 		}
 		fis.close();
 
-		addTask(taskId, name, toolId, toolName, sb.toString(), exts);
+		addTask(taskId, name, toolId, toolName, sb.toString(), exts, addOn);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, String script) {
-		addTask(taskId, name, toolId, toolName, script, (String) null);
+	public void addTask(String taskId, String name, int toolId, String toolName, String script, String addOn) {
+		addTask(taskId, name, toolId, toolName, script, (String) null, addOn);
 	}
 
-	public void addTask(String taskId, String name, int toolId, String toolName, String script, String exts) {
+	public void addTask(String taskId, String name, int toolId, String toolName, String script, String exts, String addOn) {
 		if (exts != null) {
-			addTask(taskId, name, toolId, toolName, script, exts.split(";"));
+			addTask(taskId, name, toolId, toolName, script, exts.split(";"), addOn);
 		} else {
-			addTask(taskId, name, toolId, toolName, script, (String[]) null);
+			addTask(taskId, name, toolId, toolName, script, (String[]) null, addOn);
 		}
 	}
 
@@ -138,7 +137,7 @@ public class MakeBpmn {
 	 * @param exts
 	 *            引用包，完整形式，包含import
 	 */
-	public void addTask(String taskId, String dataName, int toolId, String toolName, String script, String[] exts) {
+	public void addTask(String taskId, String dataName, int toolId, String toolName, String script, String[] exts, String addOn) {
 		if (exts != null) {
 			Element e = xml.getRootElement();
 			e = e.element("process").element("extensionElements");
@@ -177,6 +176,10 @@ public class MakeBpmn {
 		e.addAttribute("tool-id", String.valueOf(toolId));
 		e.addAttribute("tool-name", String.valueOf(toolName));
 		e.addElement("script").addText(script);
+		if(addOn == null) {
+			addOn = "";
+		}
+		e.addElement("addOn").addText(addOn);
 	}
 
 	/**
