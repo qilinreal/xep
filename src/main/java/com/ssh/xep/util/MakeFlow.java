@@ -11,6 +11,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+/**
+ * makeFlow现在不需要服务器实现了。。。
+ * Sat 17:22 10/29/2016
+ */
+@Deprecated
 public class MakeFlow {
 	private MakeBpmn bpmn;
 
@@ -26,39 +31,41 @@ public class MakeFlow {
 	// 工具是获取工具ID的，执行程序的时候，会根据工具ID获取工具位置，然后执行工具
 	// 获取工具这个功能是在JBPM执行时实现的
 	/*
-	 * String path = conn.executeSql("select toolPath from tool where toolId = [toolId]");
+	 * String path =
+	 * conn.executeSql("select toolPath from tool where toolId = [toolId]");
 	 * Process p = Process.execute("path");
 	 */
-	public void addTask(String id, String name, String toolId, String toolName, String toolType, String toolPath, JSONArray toolInfo, String addOn) throws IOException {
+	public void addTask(String id, String name, String toolId, String toolName, String toolType, String toolPath,
+			JSONArray toolInfo, String addOn) throws IOException {
 		FileInputStream fis = new FileInputStream("bpmn_script_template.dat");
 		StringBuilder sb = new StringBuilder();
 		String line;
 		BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-		while((line=br.readLine()) != null) {
+		while ((line = br.readLine()) != null) {
 			sb.append(line);
 			sb.append("\n");
 		}
 		String template = sb.toString();
 		fis.close();
 		sb = new StringBuilder();
-		if(toolType.equals("java")) {
+		if (toolType.equals("java")) {
 			sb.append("java -jar ");
-		} else if(toolType.equals("python")) {
+		} else if (toolType.equals("python")) {
 			sb.append("python ");
-		} else if(toolType.equals("shell")) {
+		} else if (toolType.equals("shell")) {
 			sb.append("/bin/bash ");
-		} else if(toolType.equals("perl")) {
+		} else if (toolType.equals("perl")) {
 			sb.append("perl ");
 		}
 		sb.append(toolPath);
 		Iterator<JSONObject> it = toolInfo.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			JSONObject obj = it.next();
 			String type = obj.getString("type");
-			if(type.startsWith("db")) {
+			if (type.startsWith("db")) {
 				sb.append(obj.getString("path"));
 				sb.append(" ");
-			} else if(type.startsWith("id")) {
+			} else if (type.startsWith("id")) {
 				sb.append("$");
 				sb.append(obj.getString("value"));
 				sb.append(" ");

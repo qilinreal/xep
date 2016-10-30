@@ -1,2 +1,1 @@
-desc tools;
-desc tool_types;
+SELECT * FROM devLog;
