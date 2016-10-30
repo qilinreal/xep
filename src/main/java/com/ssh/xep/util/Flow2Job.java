@@ -13,6 +13,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+// FINISH
+
 /**
  * 根据流程信息生成JOB
  */
@@ -42,15 +44,30 @@ public class Flow2Job {
 			}
 		}
 
-		return null;
+		return document.asXML();
 	}
 
 	/**
 	 * 这个将jobTools放进了flow之中
+	 * @throws IOException 
+	 * @throws DocumentException 
 	 */
-	public String flow2Job(String flow) {
-		/// FIXME
-		return null;
+	public String flow2Job(String flow) throws IOException, DocumentException {
+		Document document = DocumentHelper.parseText(flow);
+		Element eFlow = document.getRootElement();
+		Element process = eFlow.element("process");
+
+		// 将输出文件加入索引
+		indexOutputFileFromFlow(process);
+
+		List<Element> scripts = process.elements("scriptTask");
+		for (Element es : scripts) {
+			Element tool = es.element("tool");
+			es.remove(tool);
+			combine(es, tool);
+		}
+
+		return document.asXML();
 	}
 
 	// 将flow和jobTools进行合并，生成可以使用的bpmn
@@ -83,14 +100,32 @@ public class Flow2Job {
 		List<Element> params = et.element("params").elements();
 		for (Element p : params) {
 			if (p.getName().equals("input")) {
-				/// FIXME
+				String ref = p.attributeValue("ref");
+				String value = p.attributeValue("value");
+				if (ref.equals("fromDatabase")) {
+					sb.append("$");
+					sb.append(value);
+					sb.append(" ");
+				} else if (ref.equals("fromFlow")) {
+					int pos = value.lastIndexOf('-');
+					if (fileInfos.get(value).equals("0")) {
+						sb.append(generateFileName(value.substring(0, pos), value.substring(pos)));
+					} else {
+						sb.append("$");
+						sb.append(fileInfos.get(value));
+					}
+					sb.append(" ");
+				}
 			} else if (p.getName().equals("output")) {
 				String value = p.attributeValue("value");
-				if(value.equals("0")) {
-					String path = "/tmp/"+generateFileName(et.attributeValue("id"), p.attributeValue("id"));
+				if (value.equals("0")) {
+					String path = "/tmp/" + generateFileName(et.attributeValue("id"), p.attributeValue("id"));
 					sb.append(path);
+					sb.append(" ");
 				} else {
+					sb.append("$");
 					sb.append(value);
+					sb.append(" ");
 				}
 			} else if (p.getName().equals("param")) {
 				String type = p.attributeValue("type");
@@ -123,7 +158,7 @@ public class Flow2Job {
 		}
 
 		// 至此，执行命令生成结束
-		String commandLine = sb.toString();
+		String commandLine = sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
 
 		// 生成执行的字符串
 		text = String.format(text, toolName, commandLine, domId);
@@ -193,6 +228,7 @@ public class Flow2Job {
 
 	/**
 	 * 目前将文件放进了tmp文件夹中
+	 * 
 	 * @param domId
 	 * @param fileId
 	 *            输出文件在dom中的output节点上的id
